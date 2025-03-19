@@ -1,0 +1,40 @@
+Mon 01 2025 : 10:21:02, {$2025Z312120251}ngmdate( 'D m Y : H:i:s') doggmdate( 'D m Y : H:i:s') dog 
+gmdate( 'D m Y : H:i:s') dog '
+'Mon 01 2025 : 10:28:31dog
+20.01.25 : 10:30:06 - dog
+Date: 20.01.25 Time: 10:32:45 - dog
+Date: 20.01.25 Time: 10:34:07 - dog
+Date: 20.01.25 Time: 10:34:09 - dog
+Date: 20.01.25 Time: 10:34:14 - dog
+Date: 20.01.25 Time: 10:34:31 - cat
+Date: 20.01.25 Time: 10:47:34 - cat
+Date: 20.01.25 Time: 10:47:42 - pig
+Date: 20.01.25 Time: 10:47:47 - gaefaef
+Date: 20.01.25 Time: 10:55:54 - gaefaef
+Date: 20.01.25 Time: 10:56:03 - gaefaef
+Date: 20.01.25 Time: 10:58:32 - gaefaef
+Date: 20.01.25 Time: 10:58:35 - gaefaef
+Date: 20.01.25 Time: 11:01:35 - gaefaef
+Date: 20.01.25 Time: 11:01:41 - Dog
+Date: 20.01.25 Time: 11:03:28 - Dog
+Date: 24.01.25 Time: 10:45:39 - Dog
+Date: 24.01.25 Time: 12:45:37 - hallo
+Date: 24.01.25 Time: 12:47:57 - hallo
+Date: 24.01.25 Time: 12:48:08 - hallo
+Date: 24.01.25 Time: 12:48:32 - hallo
+Date: 24.01.25 Time: 12:49:00 - hallo
+Date: 24.01.25 Time: 12:52:29 - hallo
+Date: 24.01.25 Time: 12:52:41 - hallo
+Date: 24.01.25 Time: 12:53:11 - hallo
+Date: 24.01.25 Time: 12:55:09 - hallo
+Date: 24.01.25 Time: 12:55:39 - hallo
+Date: 24.01.25 Time: 12:55:48 - hallo
+Date: 24.01.25 Time: 12:56:42 - hallo
+Date: 24.01.25 Time: 12:58:59 - hallo
+Date: 24.01.25 Time: 13:09:13 - hallo
+Date: 24.01.25 Time: 13:14:12 - hallo
+Date: 24.01.25 Time: 13:14:47 - hallo
+Date: 24.01.25 Time: 13:14:58 - hallo
+Date: 24.01.25 Time: 13:16:26 - hallo
+Date: 24.01.25 Time: 13:18:20 - hallo
+Date: 27.01.25 Time: 09:40:44 - Dog

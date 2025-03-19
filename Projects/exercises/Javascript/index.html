@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .ausgabe-zeile{
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    
+    <input type="text" id="textEingabe">
+    <button type="button" id="add" >klick</button>    
+    <button type="button" id="addWithClass" >Add with class</button>
+    <button type="button" id="reset" >reset</button>
+    <button type="button" id="removeLast" >remove last</button>
+
+    <a href="https://google.com" id="google">Google</a>
+
+    <div id="super">
+        
+    </div>
+    <div id="ausgabe">
+
+    </div>
+    
+
+    <script>
+
+        let $super = $('#super');
+        let $ausgabe = $('#ausgabe');
+        let $add = $('#add');
+        let $reset = $('#reset');
+        let $removeLast = $('#removeLast');
+        let $addWithClass = $('#addWithClass');
+        let $textEingabe = $('#textEingabe');
+        let counter = 0;
+
+
+        $("#add").on("click", function(event){
+            console.log($textEingabe.val());
+            $ausgabe.append(`<strong>Das ist die Zeile ${counter + 1}: 
+                            ${$textEingabe.val()}</strong><br>`);
+            counter++;
+            console.log(event);
+        });
+
+        $addWithClass.on('click', function(event){
+            $ausgabe.append(`<div class="ausgabe-zeile"><strong>Das ist die Zeile ${counter + 1}: 
+                            ${$textEingabe.val()}</strong></div>`)
+            counter++;
+            console.log(event);
+        });
+
+        $reset.on('click', (event) => {
+            if(confirm("Willst du die Daten zureuecksetzen?") == true){
+                $('.ausgabe-zeile').remove();
+                counter = 0;
+            }
+        });
+
+        $removeLast.on('click', (event) =>{
+            $('.ausgabe-zeile').last().remove();
+            counter--;
+        });
+
+        $('#google').on('click', (event) =>{
+           event.preventDefault();
+        });
+
+    </script>
+
+
+
+
+</body>
+</html>

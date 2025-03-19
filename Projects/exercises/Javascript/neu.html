@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .ausgabe-zeile{
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="super">
+        
+    </div>
+    <div id="ausgabe">
+
+    </div>
+    <input type="text" id="textEingabe">
+    <button type="button" id="add" >klick</button>    
+    <button type="button" id="addWithClass" >Add with class</button>
+    <button type="button" id="reset" >reset</button>
+    <button type="button" id="removeLast" >remove last</button>
+
+    <script>
+        let $super = document.getElementById('super');
+        let $ausgabe = document.getElementById('ausgabe');
+        let $add = document.getElementById('add');
+        let $reset = document.getElementById('reset');
+        let $removeLast = document.getElementById('removeLast');
+        let $addWithClass = document.getElementById('addWithClass');
+        let $textEingabe = document.getElementById('textEingabe');
+        let counter = 0;
+
+         $super.innerHTML += "<strong>wie geht es dir?</strong>";
+
+         $add.addEventListener('click', (event) => {
+            console.log($textEingabe.value);            
+            // $super.innerHTML += "<br><strong>Das ist die Zeile " + (counter + 1) + "</strong>";
+            $ausgabe.innerHTML += `<strong>Das ist die Zeile ${counter + 1}: ${$textEingabe.value}</strong><br>`;
+            counter ++;
+            console.log(event);
+         });
+
+         $addWithClass.addEventListener('click', (event) =>{
+            $ausgabe.innerHTML += `<div class="ausgabe-zeile"><strong>Das ist die Zeile ${counter + 1}: ${$textEingabe.value}</strong></div>`;
+            counter ++;
+            console.log(event);
+         });
+
+
+         $reset.addEventListener('click', (event) => {
+            if(confirm("willst du die daten zuruecksetzen") == true){
+                let $ausgabeZeile = document.querySelectorAll('.ausgabe-zeile');
+                for (let i = 0; i < $ausgabeZeile.length; i++) {
+                    $ausgabeZeile[i].remove();
+                } 
+                counter = 0;
+            }
+
+         });
+
+         $removeLast.addEventListener('click', (event) =>{
+            //let $ausgabeZeile = document.querySelector('.ausgabe-zeile:last-child');
+            let $ausgabeZeile = document.querySelectorAll('.ausgabe-zeile');
+            console.log($ausgabeZeile);
+            if($ausgabeZeile.length > 0) {
+                $ausgabeZeile = $ausgabeZeile[$ausgabeZeile.length - 1];
+                console.log($ausgabeZeile);
+                $ausgabeZeile.remove();
+            }
+            counter--;
+         });
+
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+
+.Startseite .Start, 
+.Impressumseite .Impressum,
+.Serviceseite .Service {
+    background-color: white;
+}
+
+body {
+    background-color: gray;
+}
+
+ul{
+    list-style: none;
+    display: flex;
+    padding-left: 0;
+    background-color: rgb(190,219,233);
+    border-top: 1px solid rgb (190,219, 233);
+}
+
+ul a {
+    text-decoration: none;
+    display: block;
+    padding: 0.5rem 1rem;
+    color: inherit;
+}

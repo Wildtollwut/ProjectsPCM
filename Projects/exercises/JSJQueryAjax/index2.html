@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX&PHP</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <style>
+        /* #autocompleteResult {
+            border: 1px solid #ddd;
+            max-height: 150px;
+            overflow-y: auto;
+            position: absolute;
+            background: white;
+            width: 200px;
+        }
+        .autocomplete-item {
+            padding: 8px;
+            cursor: pointer;
+        }
+        .autocomplete-item:hover {
+            background-color: #f0f0f0;
+        } */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="formular" action="eintragen.php" method="post">
+            <div>
+                <label for="vorname">Vorname</label><br>
+                <input type="text" id="vorname" name="vorname">
+            </div>
+            <div>
+                <label for="nachname">Nachname</label><br>
+                <input type="text" id="nachname" name="nachname">
+            </div>
+            <div>
+                <label for="nachricht">Nachricht</label><br>
+                <textarea id="nachricht" name="nachricht" rows="5" cols="30"></textarea>    
+            </div>
+            <div>
+                <input type="submit" id="submitButton" value="Absenden">
+            </div>
+            <br>
+        </form>
+        <div id="response"></div>
+        <br><br>
+    </div>
+
+<!-- searchBar with button -->
+    <div class="container">
+        <form id="suchformular" action="jsonSuche.php" method="get">
+            <div>
+                <label for="sucheVorname">Suche nach Namen:</label><br>
+                <input type="text" id="sucheVorname" name="sucheVorname">
+            </div>
+            <div>
+                <input type="submit" id="submitButton" value="Absenden">
+            </div>
+        </form>
+        <div id="output"></div>
+        <br><br>
+    </div>
+
+<!-- autocomplete searchBar -->
+    <div class="container">
+        <form id="autocompleteFormular" action="jsonSuche.php" method="get">
+            <div>
+                <label for="autocompleteVorname">Autocomplete Suche nach Namen:</label><br>
+                <input type="text" id="autocompleteVorname" name="autocompleteVorname">
+            </div>
+        </form>
+
+        <div id="autocompleteResult" style="display:none"></div>
+        <br><br>
+    </div>
+
+
+<!-- SQL autocomplete searchBar -->
+<div class="container">
+    <form id="SQLautocompleteFormular" action="jsonSuche.php" method="get">
+        <div>
+            <label for="SQL">SQL Autocomplete Suche:</label><br>
+            <input type="text" id="SQL" name="SQL">
+        </div>
+    </form>
+
+    <div id="SQLResult" style="display:none"></div>
+    <br><br>
+    
+</div>
+
+    <script>
+// json Input 
+        $('#formular').on('submit', (event) =>{
+            event.preventDefault();
+            
+            let $formData = {
+                Vorname: $('#vorname').val(),
+                Nachname: $('#nachname').val(),
+                Nachricht: $('#nachricht').val()
+            };
+            console.log($formData)
+
+            $.ajax({
+                url: 'eintragen.php', //PHP file, that handel the request
+                type: 'POST',
+                data: JSON.stringify($formData), // Convert into JSON String 
+                contentType: 'application/json', //set JSON header ???
+            })
+            .done((response) =>{
+                $('#response').html(`<p>${response}</p>`);
+                $('#formular')[0].reset(); //reset form after submission ???
+            })
+            .fail((error) =>{
+                $('#response').html(`<p> style="color: red;">Error, daten konnten nicht gespeichert werden.</p>`);
+            })
+            .always(() =>{
+                $jsonString = JSON.stringify($formData);
+                $('#response').html($jsonString);
+            });
+            
+
+        });
+
+
+// searchBar with button
+        $('#sucheVorname').on('keyup', (event) =>{
+            let searchTerm = $('#sucheVorname').val();
+
+            if(searchTerm.length > 0){
+                $.ajax({
+                    url: "jsonSuche.php",
+                    type: "GET",
+                    data: {Vorname: searchTerm},
+                                        
+                }).done(function(response){
+                    //console.log(response)
+
+                    $('#output').html(response);
+                    console.log("Erfolgreich");
+
+                }).fail(function(error){
+                    console.error("XML datei konnte nicht gefunden werden", error.responseText);
+                    
+                }).always(function(){
+
+                }); 
+            }
+        });
+
+
+// autocomplete searchBar OBJECT
+    $(document).ready(function(){
+        $('#autocompleteVorname').on('keyup', function(event) {
+            const searchTerm = $(this).val().trim();
+
+            if(searchTerm.length > 0){
+                $.ajax({
+                    url: 'autocomplete.php',
+                    type: 'GET',
+                    data: {Vorname: searchTerm}, // OBJECT key : value, 
+                                                 //     key = PHP recieve this name for $_POST['Vorname'], 
+                                                 //     value = JS variable with actual value to send 
+                })
+                .done(function(response){
+                    //console.log(response);
+                    const data = JSON.parse(response);
+                    //console.log(data);
+                    let $html = "";
+                    $html += "<ul>";
+                    for (const [index, name] of Object.entries(data)) {
+                        console.log(`${index}: ${name}`);
+                        $html += `<div class="autocomplete-item"><li>${name}</li></div>`;
+                    }
+                    $html += "</ul>";
+                    $('#autocompleteResult').html($html).show(3000);
+
+                })
+                .fail(function(error){
+                    $('#autocompleteResult').html(error.responseText).show(3000);
+                });
+                
+            } else {
+                $('#autocompleteResult').html("").hide();
+            }
+        });
+        
+        $(document).on('click', '.autocomplete-item', function(){
+            let $vorschlag = $(this).text();
+            console.log($vorschlag)
+            $('#autocompleteVorname').val($vorschlag);
+
+        });
+
+        $(document).on('click', (event =>{
+            if(!$(event.target).closest('#autocompleteVorname, #autocompleteResult').length){
+                $('#autocompleteResult').html("").hide();
+            }
+        }));
+    });
+
+
+//SQL autocomplete ARRAY
+    $(document).ready(function(){
+        $('#SQL').on('keyup', function(event) {
+            const searchTerm = $(this).val().trim();
+            
+            if(searchTerm.length > 0){
+                $.ajax({
+                    url: 'SQLautocomplete.php',
+                    type: 'POST',
+                    datatype: 'json',
+                    data: {name: searchTerm}
+                    
+                })
+                .done(function(response){
+                    console.log(response); // response = JSON String
+
+                    const jsonObj = JSON.parse(response); // parse() JSON String into JSON Object
+                    //console.log(jsonObj);
+                    
+                    //const data = jsonObj.data;
+                    //const testdfgdfg = jsonObj.test
+                    const {data, test} = jsonObj;
+
+                    console.log(data, test)
+
+                    // let jsonArray = Object.values(jsonObj); // Object.values() JSON Object into nested Array
+                    // console.log(jsonArray);
+                    // console.log(jsonArray[0]);
+
+                    // let names = jsonArray[0];   // Array[0]                 
+                    // Object.values(jsonArray[0]).forEach(entry => console.log(entry.name));
+            
+                    let $html = "";
+                    $html += "<ul>";                                                    
+                    for(let key in data){
+                        $html += `<li class='autocomplete-itemSQL'>${data[key].name}</li>`;
+                    }
+                    $html += "</ul>";
+                    $('#SQLResult').html($html).show(3000);
+
+                    // for($entry in jsonData){
+                    //     //console.log(jsonData($entry['name']));
+                    //     $html += `<li>${$entry['name']}</li>`;
+                    // }
+                })
+                .fail(function(error){
+                    console.log('nicht erfolgreich')
+                    $('#SQLResult').html(error.responseText).show(3000);
+                });
+                
+            } else {
+                $('#SQLResult').html("").hide();
+            }
+        });
+        
+        $(document).on('click', '.autocomplete-itemSQL', function() {
+            let $vorschlag = $(this).text();
+            console.log($vorschlag)
+            $('#SQL').val($vorschlag);
+
+        });
+
+        // $(document).on('click', (event =>{
+        //     if(!$(event.target).closest('#autocompleteVorname, #autocompleteResult').length){
+        //         $('#autocompleteResult').html("").hide();
+        //     }
+        // }));
+    });
+
+    
+    </script>
+    
+</body>
+</html>

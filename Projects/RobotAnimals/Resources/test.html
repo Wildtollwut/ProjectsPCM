@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../Assets/JS/jQuery.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        ul.rezepte li:nth-child(even){
+            color: red;
+        }
+        ul.rezepte li:nth-child(odd){
+            color: rgb(0, 136, 255);
+        }
+        li{
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+        li:first-child{
+            padding-top: 0px;
+        }
+        li:last-child{
+            padding-bottom: 0px;
+        }
+        
+
+    </style>
+</head>
+<body>
+    
+    <ul class="liste">
+        <li>Item1 <button>Delete</button></li>
+        <li>Item2 <button>Delete</button></li>
+    </ul>
+
+
+    <ul class="rezepte">
+
+    </ul>
+
+    <ul class="tiere">
+
+    </ul>
+
+
+    <button id="addRezept">Rezept hinzufügen</button> <!--erste     rezepte.json tiere.json-->
+    <button id="addTier">Tier hinzfügen</button> <!--letzte-->
+
+
+    <script>
+
+        $(document).ready(function(){
+
+            let items = [];
+            // get json data from json file
+            $.getJSON('rezepte.json', function(data){
+                // loop through json data and add to an array
+                $.each(data, function(key, value){
+                    items.push(value);
+                });
+                console.log(items);
+                // loop through array to print html list of json data
+                items.forEach((entry, index) =>{
+                    const $rezept = $(`<li data-index="${index}"><span>${entry}</span> <button class="delete">Delete</button></li>`);
+                    $('.rezepte').prepend($rezept);
+                });
+            });
+            
+            // attach button, to select button in class .liste, button need to exists on pageload    #
+            $('.liste button').on('click', function(){  
+                const $button = $(this);
+
+                // .parent(), get parent element        
+                const $li = $button.parent();   
+
+                console.log($(this));
+
+                //console.log($(this));     // ->refer to the selected element to which the event is attached
+                //console.log($this);       // ->refer to a variable
+
+
+                //$li.hide(300).remove()        // -> asyncrone, both are executed simultaneously
+                // second parameter is a CALLBACK FUNCTION
+                $li.hide(3000, function() {     // <- do it like this     
+                    $(this).remove();
+                });
+
+                
+            });
+
+            // Click on addRezept
+            $('#addRezept').on('click', function(){
+                // not necessary, because of #addRezept is an ID and unique
+                const $this = $(this); 
+
+                // Ask for a Rezeptname until the given data is empty
+                let rezeptname = '';
+                do{
+                    rezeptname = prompt('Bitte Rezept hinzufügen').trim();
+                } while(rezeptname === '');
+
+                console.log(rezeptname);
+
+                // Create data object for the ajax request
+                let data = {
+                    rezeptname: rezeptname
+                };
+                console.log(data);
+
+                // Send async request to rezepte.php
+                $.ajax({
+                    url: './rezepte.php',
+                    type: 'POST',
+                    data: data
+                })
+                // Request was successfully sent (status 200)
+                .done(function(response){
+                    // Get list Rezepte from ul.rezepte
+                    const $rezepte = $('.rezepte');
+ 
+                    // convert Json String in an JS Object
+                    const {data} = JSON.parse(response);
+                    // get the rezepte in data-object
+                    const rezepte = data.rezepte;
+                    
+                    // delete li elemente befor creating new list
+                    $rezepte.html('');                 // deletes all .rezepte html elements
+                    //$rezepte.find('li').remove();    // deletes all li elements
+
+                    rezepte.forEach((rezept, index) => {
+                        const $rezept = $(`<li data-index="${index}"><span>${rezept}</span> <button>Delete</button></li>`);    // jquery object $('') *
+                        $rezepte.prepend($rezept);
+                    });
+                })
+                // Request failed (error 4XX or 5XX)
+                .fail(function(error) {
+                    const {data} = JSON.parse(error.responseText);
+                    alert(data.message);
+                });
+            });
+
+
+            $('#addTier').on('click', function(){
+                let tiername = '';
+                do{
+                    tiername = prompt('Bitte Tier hinzufügen').trim();
+                }while(tiername === '' );    
+
+                    let data = {
+                        tiername: tiername
+                    }
+                    console.log(data)
+                    $.ajax({
+                        url: './tiere.php',
+                        type: 'POST',
+                        data: data
+                    })
+                .done(function(response){
+                    const $tiere = $('.tiere');
+                    const {data} = JSON.parse(response);
+                    const tiere = data.tiere;
+
+                    $tiere.html('');
+
+                    tiere.forEach(tier => {
+                        const $tier = `<li><span>${tier}</span> <button class="delete">Delete</button></li>`;        // string *
+                        $tiere.append($tier);
+                    })
+                })
+                .fail(function(error) {
+                    const {data} = JSON.parse(error.responseText);
+                    alert(data.message);
+                });         
+            });
+
+            // $(' html elements need to exists on start').on('click, 'constant search for html elements'')    # 
+            $('.rezepte').on('click', 'button', function(){
+                const $this = $(this);
+                const $liParent = $this.parent();
+
+                const rezeptname = $liParent.find('span').text();
+                const rezeptIndex = $liParent.data('index');
+
+                console.log(rezeptIndex + ": " + rezeptname);
+
+
+                let data = {
+                    rezeptIndex: rezeptIndex
+                } 
+                console.log(data);
+
+                $.ajax({
+                    url: 'deleteRezept.php',
+                    type: 'POST',
+                    data: data
+                })
+                .done(function(response){
+                    console.log(response);
+                    
+                    // second parameter is a CALLBACK FUNCTION
+                    $liParent.hide(2000, function(){
+                        $(this).remove();
+                    });
+                });
+
+            });
+
+        });
+    </script>
+</body>
+</html>

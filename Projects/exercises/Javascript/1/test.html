@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="hello">Klick mich!</button>
+    <button id="hello2">Klick mich!</button>
+
+    <h2>Willkommen <span id="output"></span></h2>
+    <input type="text" id="name" placeholder="dein Name" autocomplete="off">
+
+    <input type="text" id="farbe" placeholder="Farbe" spellcheck="false">
+    <br>
+    <br>
+
+
+    <input type="number" id="a" placeholder="a">
+    <select id="operator">
+        <option value="+">+</option>
+        <option value="-">-</option>
+        <option value="*">*</option>
+        <option value="/">/</option>
+    </select>
+    <input type="number" id="b" placeholder="b">
+    <button id="calculate">=</button>
+    <span id="result"></span>
+
+
+
+<script>
+
+    document.querySelector('#calculate').addEventListener('click', function(){
+        const a = document.getElementById('a').value
+        const b = document.getElementById('b').value
+        const operator = document.getElementById('operator').value
+        let result = 0
+    
+
+    if (operator === '+'){
+        result = parseInt(a) = parseInt(b)
+    } else if(operator === '-'){
+        result = a - b
+    } else if(operator === '*'){
+        result = a * b
+    } else if(operator === '/'){
+        result = a / b
+    }
+    document.getElementById('result').textContent = result
+})
+
+    
+
+
+
+
+
+
+    // document.getElementById('name').addEventListener('input', hello)
+    // function hello(){
+    //     document.getElementById('output').textContent = this.value
+    // }
+
+    // document.querySelector('input').addEventListener('input', function(){
+    //     document.querySelector('h2').style.color = this.value
+    // })
+
+    // document.getElementById('hello2').addEventListener('click', greeting())
+
+    // function greeting(){
+    //     alert('Hallo Welt')
+    // }
+
+    // function allEven(){
+    //     let response = ''
+    //     for(let i =2; i<=20; i=i+2){
+    //         response = response + i+ ','
+
+    //     }
+    //     return response
+    // }
+
+    // function olympia(){
+
+    //     const response = athletes[2] + ',' + athletes[3] + ',' + athletes[4]
+    //     return response
+    // }
+
+    // function add(){
+    //     const result = parseInt(a) = parseInt(b)
+    //     return result
+    // }
+    
+
+</script>
+</body>
+</html>

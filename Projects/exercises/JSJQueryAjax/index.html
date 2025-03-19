@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQueryAJAX</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js"></script>
+    <style>
+        
+        .lds-dual-ring,
+        .lds-dual-ring:after {
+            box-sizing: border-box;
+        }
+        .lds-dual-ring {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+        }
+        .lds-dual-ring:after {
+            content: " ";
+            display: block;
+            width: 64px;
+            height: 64px;
+            margin: 8px;
+            border-radius: 50%;
+            border: 6.4px solid currentColor;
+            border-color: currentColor transparent currentColor transparent;
+            animation: lds-dual-ring 1.2s linear infinite;
+        }
+        @keyframes lds-dual-ring {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #loading{
+            display:none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="loading" class="lds-dual-ring"></div>
+
+    <div class="container">
+        <form id="meinformular" action="eintragen.php" method="post">
+            <div>
+                <label for="vorname">Vorname</label>
+                <input type="text" id="vorname" name="vorname">
+            </div>
+            <div>
+                <label for="nachname">Nachname</label>
+                <input type="text" id="nachname" name="nachname">
+            </div>
+            <div>
+                <input type="submit" id="submitButton" value="Absenden">
+            </div>
+
+            <!-- <div>
+                <input type="submit" id="submitButton" value="klicken">
+            </div> -->
+            <br>
+            <br>
+            <br>
+
+        </form>
+
+        <form id="suchformular" method="get" action="suche.php">
+            <label for="begriff">Suche</label>
+            <input type="text" id="begriff" name="begriff">
+            <button name="suchen" id="suchen">Suchen</button>
+            <br><br>
+            <br><br>
+
+        </form>
+    </div>
+
+
+
+
+
+    <script>    
+//autocomplete
+        let $meinArray = [];
+
+        const $loading = $('#loading');
+        $loading.css("display", "block");
+
+        $.ajax({
+            url: "seiten.xml",
+            dataType: "xml",
+            //success: verarbeiten,
+            //complete: vervollstaendigen,
+            // failure: function(){
+            //     console.log("XML datei konnte nicht gefunden werden");
+            // }
+            
+        }).done(function($xml){
+            console.log($xml)
+
+            //$(xml).find("link").each(function(){
+            $("link", $xml).each(function(){
+
+                //$meinArray.push($(this).find("title").text());
+                const $this = $(this);
+                $meinArray.push($('title', $this).text());
+            });
+
+
+            console.log($meinArray)
+
+            $("input#begriff").autocomplete({
+                source: $meinArray,
+                minLength: 1,
+                select: function(event, ui){
+                    $("input#begriff").val(ui.item.value);
+                    $("#suchformular").submit();
+                }
+            });
+
+            console.log("Erfolgreich");
+        }).fail(function(error){
+            console.error("XML datei konnte nicht gefunden werden", error.responseText);
+        }).always(function(){
+            setTimeout(() => {
+                $loading.css("display", "none");
+            }, 1000);
+            console.log("Abfrage fertig");
+        });
+
+        // function verarbeiten(xml){
+        //     $(xml).find("link").each(function(){
+        //         $meinArray.push($(this).find("title").text());
+        //     });
+        // }
+    
+        // function vervollstaendigen(){
+        //     $("input#begriff").autocomplete({
+        //         source: $meinArray,
+        //         minLength: 1,
+        //         select: function(event, ui){
+        //             $("input#begriff").val(ui.item.value);
+        //             $("#suchformular").submit();
+        //         }
+        //     });
+        // }
+
+// mehrere dateien laden
+        function erfolg(){
+            console.log("alles geladen");
+        }
+
+        function fehler(){
+            console.log("fehler");
+        }
+
+        $.when(
+            $.get("beispiel.php"),
+            $.getJSON("colors.json")
+        ).then(erfolg, fehler);
+
+//json datei anfragen
+        $.getJSON("colors.json", function(daten){
+            var $inhalte = [];
+            
+            $.each(daten.colorsArray, function(index, wert){
+                $inhalte.push(`<li id="nr${index}">${wert.colorName}: ${wert.hexValue}</li>`)
+                //$inhalte.push("<li id='nr" + index + "'>" + wert.colorName + ": " + wert.hexValue + "</li>");
+            });
+
+            $('<ul/>', {
+                "class": "liste",
+                html: $inhalte.join("")
+            }).appendTo('body');
+            console.log($inhalte);
+        });
+
+
+
+        $('button').on('click', (event) =>{
+            $.post(
+                "beispiel.php",
+                {thema: "jQuery", stunden: "2"},
+                (daten) =>{
+                    $('#ausgabe').html(`empfangen: ${daten}`)
+                }
+            );
+        });
+
+
+
+
+    $('#meinformular').on('submit', (event) =>{
+        event.preventDefault();
+        var $formular = $(this),
+            url = $formular.attr("action");
+        // var $posting = $.post(
+        //     url,
+        //     {
+        //         vorname: $('#vorname').val(),
+        //         nachname: $('#nachname').val()
+        //     }
+        // );
+        var $posting = $.post(
+            url,
+            $formular.serialize()
+        );
+        console.log($posting);
+        $posting.done(function(daten2) {
+            $('.container').html("Erfolg: " + daten2);
+            console.log(daten2);
+        });
+    });
+
+
+
+
+
+
+
+//get
+        $('button').on('click', function(e){
+
+            $.get(
+                'beispiel.php',               //fetch extern Resources
+                { thema: "JQuery", stunden: "2"},   //passes Data
+                function(data){                     //shows recieved Data
+                    $('#ausgabe').html('empfangen: ' + data);
+                }
+            );
+        });
+
+        $('button').on('click', (event) => {
+            var $ausgabe = $('#ausgabe');
+            var jqxhr = $.get('beispiel.php', function(){
+                $ausgabe.append('Erfolg');
+            })
+            .done(function(){
+                $ausgabe.append('2. Erfolg');
+            })
+            .fail(function(){
+                $ausgabe.append('Fehler');
+            })
+            .always(function(){
+                $ausgabe.append('beendet');
+            })
+        });
+    
+        // jqxhr.always(function(){
+        //     $ausgabe.append('Fertig')
+        // });
+
+
+//post
+        $('button').on('click', function(e){
+        $.post(
+            'beispiel.php',               //fetch extern Resources
+            { thema: "JQuery", stunden: "2"},   //passes Data
+            function(data){                     //shows recieved Data
+                $('#ausgabe').html('empfangen: ' + data);
+            }
+        );
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // document.getElementById("element").onmouseover = function(){
+        //     xhr.open("get", "axaj.json", true);
+        //     xhr.onreadystagechange = funcrion();{
+        //         if(xhr.readyState == 4){
+        //             document.getElementById('info').innerHTML = JSON.parse(xhr.responseText).person.vname;
+        //         }
+        //     }
+        // }
+
+        // function verzoegerteAntwort(){
+        //     return new Promise(resolve => {
+        //         var verzoeger=Math.round(Math.random()*10);
+        //         console.log(verzoeger);
+        //         setTimeout(() => {
+        //             resolve(verzoeger);
+        //         }, verzoeger*1000);
+        //     });
+        // }
+        // function verzoegerteAntwort(x){
+        //     return new Promise((resolve) =>{
+        //         var xhr = new XMLHttpRequest();
+        //         xhr.open("GET", "verzoegerterAufruf.php?id=" + x, true);
+        //         xhr.onreadystatechange = function() {
+        //             if (xhr.readyState == 4){
+        //                 resolve(xhr.responseText);
+        //             }
+        //         };
+        //         xhr.send();
+        //     });
+        // }
+
+        // async function asyncAufruf(){
+        //     console.log('Aufruf gestartet');
+        //     const result = await verzoegerteAntwort();
+        //     console.log(result);
+            
+        // }
+
+    </script>
+
+</body>
+</html>

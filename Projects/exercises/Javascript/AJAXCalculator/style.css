@@ -1,0 +1,38 @@
+table {
+    width: 100%;
+    height: 70vh;
+    background-color: rgb(34, 34, 34);
+    color: white;
+}
+
+td { 
+    width: 25%;
+    text-align: center;
+    background-color: rgb(25, 25, 25);
+    font-size: 24px;            
+}
+
+td:hover{
+    background-color: rgb(26, 30, 87);
+    cursor: pointer;
+}
+
+#resultArea{
+    height: 20vh;
+    background-color: rgb(66, 66, 66);
+    color:white;
+    font-size: 48px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding:24px;
+    box-sizing: border-box;
+}
+
+#result {
+    background-color: rgb(29, 30, 39);
+}
+
+.highlight {
+    background-color: rgb(25,25,25);
+}

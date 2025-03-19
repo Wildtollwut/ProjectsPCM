@@ -1,0 +1,44 @@
+[
+	{
+		"personal_nr" : 1,
+		"nachname" : "Max",
+		"vorname" : "Mustermann",
+		"gehalt" : 2250.00,
+		"abteilung" : 1
+	},
+	{
+		"personal_nr" : 2,
+		"nachname" : "Doe",
+		"vorname" : "Jane",
+		"gehalt" : 3400.00,
+		"abteilung" : 2
+	},
+	{
+		"personal_nr" : 3,
+		"nachname" : "Doe",
+		"vorname" : "John",
+		"gehalt" : 3200.00,
+		"abteilung" : 2
+	},
+	{
+		"personal_nr" : 4,
+		"nachname" : "Bernie",
+		"vorname" : "Bob",
+		"gehalt" : 2800.00,
+		"abteilung" : 1
+	},
+	{
+		"personal_nr" : 5,
+		"nachname" : "Ramirez",
+		"vorname" : "Riccado",
+		"gehalt" : 3400.00,
+		"abteilung" : 1
+	},
+	{
+		"personal_nr" : 6,
+		"nachname" : "Mort",
+		"vorname" : "Zed",
+		"gehalt" : 3000.00,
+		"abteilung" : 1
+	}
+]

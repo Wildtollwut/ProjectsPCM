@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script
+            src="https://code.jquery.com/ui/1.14.1/jquery-ui.min.js"
+            integrity="sha256-AlTido85uXPlSyyaZNsjJXeCs07eSv3r43kyCVc8ChI="
+            crossorigin="anonymous"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+
+        canvas {
+            border: 2px solid black;
+            background-color: white;
+            display: block;
+            position: relative;
+            left: -50px; /* Moves it 50px left */
+            top: 50px; /* Moves it 50px down */
+
+        }
+
+        #draggable { width: 150px; height: 150px; padding: 0.5em; }
+        .draggables {
+            background-color: #ade55c;
+            width: 100px;
+            height: 100px;
+            padding: 0px;
+            float: left;
+            margin: 0 0px 0px 0;
+            font-size: .9em;
+            border: #ade55c 1px solid;
+            position: relative;
+            left: -120px; /* Moves it 50px left */
+            top: 100px;
+        }
+        .draggables2 {
+            background-color: aquamarine;
+            width: 100px;
+            height: 200px;
+            padding: 0px;
+            float: left;
+            margin: 0 0px 0px 0;
+            font-size: .9em;
+            border: #ade55c 1px solid;
+            position: relative;
+            left: -120px; /* Moves it 50px left */
+            top: 50px;
+        }
+    </style>
+    <title>Document</title>
+
+    <script>
+        $( function() {
+
+            $( ".draggables" ).draggable({ grid: [ 100, 100 ] });
+            $( ".draggables2" ).draggable({ grid: [ 100, 100 ] });
+        } );
+        window.onload = function() {
+            const canvas = document.getElementById("gridCanvas");
+            if (!canvas) {
+                console.error("Canvas element not found!");
+                return;
+            }
+
+            const ctx = canvas.getContext("2d");
+
+            canvas.width = 600;
+            canvas.height = 600;
+
+            const cellSize = 100;
+            const gridSize = canvas.width / cellSize;
+
+            function drawGrid() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = 1;
+
+                for (let i = 0; i <= gridSize; i++) {
+                    let pos = i * cellSize;
+
+                    // Draw vertical lines
+                    ctx.beginPath();
+                    ctx.moveTo(pos, 0);
+                    ctx.lineTo(pos, canvas.height);
+                    ctx.stroke();
+
+                    // Draw horizontal lines
+                    ctx.beginPath();
+                    ctx.moveTo(0, pos);
+                    ctx.lineTo(canvas.width, pos);
+                    ctx.stroke();
+                }
+            }
+
+            drawGrid();
+        };
+    </script>
+
+    </head>
+    <body>
+
+    <canvas id="gridCanvas"></canvas>
+    <div id="draggable" class="ui-widget-content">
+        <p>Drag me around</p>
+    </div>
+    <div id="draggable1" class="draggables ui-widget-content">
+        <p>I snap to a 100 x 100 grid</p>
+    </div>
+    <div id="draggable2" class="draggables2 ui-widget-content">
+        <p>I snap to a 200 x 100 grid</p>
+    </div>
+
+
+</body>
+</html>

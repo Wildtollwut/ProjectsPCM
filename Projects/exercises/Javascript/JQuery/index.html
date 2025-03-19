@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .warnung{
+            background-color: chocolate;
+        }
+        .warnung + p{
+            color:blueviolet;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="button">Klick</button>
+    <button class="button2">Klick</button>
+    
+    <div class="container">
+        <p class="beispiel">Bitte klicken</p>
+        <p class="beispiel">Bitte klicken</p>
+        <p class="beispiel">Bitte klicken</p>
+    </div>
+
+    <textarea name="eingabe" id="eingabe" rows="5" cols="40"></textarea>
+    <p id="zeichenzahl"></p>
+
+    <div id="inhalt">
+        <h2>Lorem ipsum?</h2>
+        <div class="antwort">
+            <p>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. 
+                Mollitia, placeat repellat! Illo, quis. Pariatur quasi sint 
+                eos at sapiente nesciunt necessitatibus doloremque aperiam 
+                ex numquam error distinctio, earum labore. Rerum?
+            </p>
+        </div>
+        <h2>Lorem ipsum, dolor sit amet consectetur adipisicing.</h2>
+        <div class="antwort">
+            <p>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. 
+                Mollitia, placeat repellat! Illo, quis. Pariatur quasi sint 
+                eos at sapiente nesciunt necessitatibus doloremque aperiam 
+                ex numquam error distinctio, earum labore. Rerum?
+            </p>
+        </div>
+        <h2>Lorem ipsum dolor sit amet.</h2>
+        <div class="antwort">
+            <p>
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. 
+                Mollitia, placeat repellat! Illo, quis. Pariatur quasi sint 
+                eos at sapiente nesciunt necessitatibus doloremque aperiam 
+                ex numquam error distinctio, earum labore. Rerum?
+            </p>
+        </div>
+    </div>
+
+    <div class="blumen">
+        <a href="">text hier</a>
+    </div>
+    <div class="details"></div>
+
+
+    <div class="container">
+        <form id="meinformular" action="eintragen.php" method="post">
+            <div>
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name"/>
+            </div>
+            <div>
+                <label for="nachricht">Nachricht</label><br>
+                <textarea rows="10" cols="30" id="nachricht" name="nachricht"></textarea>
+            </div>
+            <div>
+                <input type="submit" value="Absender"/>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        $(".button").on("click", function(){
+            console.log("klick");
+        });
+        // click on button2 triggers button 1
+        $(".button2").on("click", function(){
+            $("#eins").trigger("click");
+        });
+
+
+    //event delegation
+        //$('body').append('<button class="button">neue</button>');
+                                //refers to
+        $(document).on("click", ".button", function(){
+            console.log("klick");
+        });
+
+    // mehrere Ereignisse abfangen
+        $('.container').on(
+            {
+                click : function(){
+                    $(this).css('background-color', "green")
+                },
+                dblclick : function(){
+                    $(this).css('background-color', 'blue')
+                },
+                contextmenu : function(){
+                    $(this).css('background-color', 'lime')
+                },            
+            }, '.beispiel'
+        );
+
+    //Zeichenzahl zaehlen
+        $('#eingabe').on('keyup', function(){
+            let max = 20;
+            let aktuell = max - $(this).val().length;
+            $('#zeichenzahl').html(aktuell + "/" + max);
+            if(aktuell < 0){
+                $(this).addClass('warnung');
+            } else {
+                $(this).removeClass('warung');
+            }
+        });
+
+
+    //ein/ausklappen
+
+    let $frage = $('#inhalt h2'), $antwort = $('.antwort');
+    $antwort.not(":first").hide();
+    $frage.on('click', function(){
+        let $aktantwort = $(this).next();
+        if($aktantwort.is(':visible')){
+            return;
+        }
+        $antwort.slideUp();
+        $antwort.slideDown();
+    });
+
+    //exteren quelle/dokumente laden
+        $('.blumen a').on('mouseenter click', function(event){
+            event.preventDefault();
+            let url = $(this).attr('href');
+            $('.details').load(url);
+        });
+
+    
+    //Submit
+        $('#meinformular').on("submit", function(event){
+            event.preventDefault();
+            let $formular = $(this),
+                url = $formular.attr('action');
+            // let posting = $.post(
+            //     url,{
+            //         name: $('#name').val(),
+            //         nachricht: $('#nachricht').val()
+            //     }
+            // );
+            let posting = $.post(url, $formular.serialize());
+
+
+            posting.done(function(daten){
+                $('.container').append("Eingegeben: " + daten);
+            });
+        });
+
+    </script>
+</body>
+</html>

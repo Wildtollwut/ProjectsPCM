@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <form id="calculator">
+    <div id="resultArea">
+            
+    </div>
+    <table> 
+        <tr>
+            <td></td>
+            <td></td>
+            <td class="deleteAll">C</td>
+            <td class="deleteLast">DEL</td>
+        </tr>
+        <tr>
+            <td class="appendOperation" value="7" >7</td>
+            <td class="appendOperation" value="8" >8</td>
+            <td class="appendOperation" value="9" >9</td>
+            <td class="appendOperation" value="/" >/</td>
+        </tr>
+        <tr>
+            <td class="appendOperation" value="4" >4</td>
+            <td class="appendOperation" value="5" >5</td>
+            <td class="appendOperation" value="6" >6</td>
+            <td class="appendOperation" value="*">*</td>
+        </tr>
+        <tr>
+            <td class="appendOperation" value="1" >1</td>
+            <td class="appendOperation" value="2" >2</td>
+            <td class="appendOperation" value="3" >3</td>
+            <td class="appendOperation" value="+">+</td>
+        </tr>
+        <tr>
+            <td class="appendOperation" value="0" >0</td>
+            <td class="appendOperation" value="." >.</td>
+            <td id="result">=</td>
+            <td class="appendOperation" value="-">-</td>
+        </tr>
+    </table>
+    </form>
+
+
+    <script>
+        
+        $(document).ready( function(){
+            $('#result').on('click', function(){
+                const calculation = $("#resultArea").text().trim();
+                console.log("send -> ", calculation);
+
+                if(!isNaN(calculation.charAt(0))){
+                    $.ajax({
+                        url: 'calculate.php',
+                        type: 'POST',
+                        data: {calculation: calculation} // OBJECT key : value, 
+                                                         //     key = PHP recieve this name for $_POST['calculation'], 
+                                                         //     value = JS variable with actual value to send 
+                    })
+                    .done(function(response){
+                        console.log(response)
+                        const {data} = JSON.parse(response);  // {data} fetch value from Json Objekt instead of data.data
+
+                        console.log(data)
+
+                        // const data2 = data.data
+
+                        $('#resultArea').text(data);
+                        // console.log("Erfolgreich");
+                    })
+                    .fail(function(error){
+                        console.error("PHP datei konnte nicht gefunden werden", error.responseText);
+                    })
+                    .always(function(){
+
+                    });
+                }else{
+                    $('#resultArea').text("Invalid input").hide(3000);
+                    $('#resultArea').text(""); 
+                    console.log("error");
+                }
+            });
+
+            $('.appendOperation').on('click', function(){
+                let $test = $(this).text();
+                $('#resultArea').append($test);
+                console.log($test);
+
+            });
+
+            $('.deleteAll').on('click', function(){
+                $('#resultArea').text("");                
+            })
+
+            $('.deleteLast').on('click', function(){
+                $('#resultArea').slice(0, -1);
+            })
+
+        });
+
+
+
+
+
+// function appendOperation(operation){
+//     document.getElementById('resultArea').innerHTML += operation;
+// }
+
+// function caluclateResult(){
+//     let container = document.getElementById('resultArea');
+//     let result = eval(container.textContent);
+//     container.textContent = result;
+// }
+
+function deleteLast(){
+    let container = document.getElementById('resultArea');
+    container.textContent = container.textContent.slice(0, -1);
+}
+
+
+
+    </script>
+</body>
+</html>

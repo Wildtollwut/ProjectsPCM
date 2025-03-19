@@ -1,0 +1,133 @@
+.nav{
+
+}
+a{
+    text-decoration: none;
+}
+ul{
+    list-style-type: none;
+}
+li{
+    background-color: #6ea8fe;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid darkblue;
+}
+.box .navi_item{
+    background-color: coral;
+    padding: 5px;
+    border-radius: 5px;
+    border: 2px solid chocolate;
+    margin: 0.5rem;
+}
+.nav_eins{
+    display: flex;
+    justify-content: center;
+    border: 1px solid black;
+    margin-left: 30rem;
+    margin-right: 30rem;
+    padding-left: 0;
+}
+
+.nav_zwei{
+    display:flex;
+    width: 500px;
+    justify-content: space-around;
+    border: 1px solid black;
+    margin-left: 30rem;
+    margin-right: 30rem;
+    padding-left: 0;
+}
+
+.nav_drei{
+    display:flex;
+    flex-direction: column;
+    align-items:flex-start;
+    max-width: 300px;
+    border: 1px solid black;
+    margin-left: 10rem;
+    padding-left:0;
+}
+.nav_drei .navi_item{
+
+    width: 100px;
+}
+.nav_drei .aktuell, .service{
+    align-self: center;
+}
+.nav_drei .produkte{
+    align-self: flex-end;
+}
+.nav_vier{
+    display:flex;
+    max-width: 400px;
+    flex-wrap: wrap;
+    border: 1px solid black;
+}
+
+.box{
+    justify-content: center;
+    border: 2px dotted coral;
+    display:flex;
+    height: 50vh;
+    width: 80vh;
+    margin-right: 20vh;
+    margin-left:20vh;
+    align-items: flex-start;
+    flex-wrap:wrap;
+}
+
+.saktuell{
+    align-self: stretch;
+  }
+.sprodukte{
+    align-self: center;
+}
+.sservice{
+    align-self:flex-end;
+}
+.boxbox{
+    display: flex;
+    flex-direction: row-reverse;
+    margin:0;
+}
+.estart{
+    order:2;
+}
+.ekontakte{
+    order:3;
+}
+.eaktuell{
+    order:-1;
+}
+
+.first{
+    display: flex;
+    background-color: #ffc107;
+    width: 450px;
+    height: 450px;
+    border: 2px dotted darkgoldenrod;
+    padding:0.5rem;
+    margin: 1rem;
+    flex-wrap: wrap;
+    align-content: space-evenly;
+}
+.first > *{
+    background-color: #997404;
+    border: 2px solid cornsilk;
+    justify-items: center;
+    padding:1.5rem;
+    flex: 1 1 50px;
+}
+
+.second{
+    /*flex-direction: column;*/
+
+}
+.second > *{
+    background-color: #997404;
+    border: 2px solid cornsilk;
+    justify-items: center;
+    padding:1.5rem;
+    flex: 1 1 50px;
+}
